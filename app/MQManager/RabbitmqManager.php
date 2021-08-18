@@ -6,9 +6,12 @@ use Illuminate\Support\Arr;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
+use PhpAmqpLib\Wire\AMQPTable;
 
 class RabbitmqManager
 {
+    protected $delay;
+
     /** @var $attribute ConfigAttribute */
     protected $attribute;
 
@@ -24,12 +27,22 @@ class RabbitmqManager
         $this->attribute = $attribute;
     }
 
+    protected function setDelay($delay = 0): RabbitmqManager
+    {
+        $this->delay = $delay;
+
+        return $this;
+    }
+
     /**
      * 生产者
      * @param $body
+     * @param int $delay
      */
-    public function push($body)
+    public function push($body, int $delay = 0)
     {
+        $this->setDelay($delay);
+
         $channel = $this->channel;
         $attribute = $this->attribute;
 
@@ -42,6 +55,13 @@ class RabbitmqManager
         $properties = $attribute->getDurableMessage() ? [
             'delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT // 消息持久化
         ] : [];
+
+        if ($delay > 0) {
+            $table = new AMQPTable();
+            $table->set('x-delay', $delay * 1000);
+
+            $properties = $properties + ['application_headers' => $table];
+        }
 
         $message = new AMQPMessage(json_encode($body, JSON_UNESCAPED_UNICODE), $properties);
 
@@ -123,6 +143,14 @@ class RabbitmqManager
 
         $durable = $attribute->getDurable();
 
+        // 延迟队列
+        $queueArguments = $arguments = [];
+//        if ($this->delay > 0) {
+            $type = 'x-delayed-message';
+            $arguments = new AMQPTable(['x-delayed-type' => 'direct']);
+            $queueArguments = new AMQPTable(['x-dead-letter-exchange' => 'delayed']);
+//        }
+
         /**
          * 声明初始化交换机（
          *      direct【精准推送】、
@@ -135,7 +163,7 @@ class RabbitmqManager
          * @param bool $durable 是否开启队列持久化
          * @param bool $auto_delete 通道关闭后是否删除队列
          */
-        $channel->exchange_declare($exchange, $type, false, $durable, false);
+        $channel->exchange_declare($exchange, $type, false, $durable, false, false, false, $arguments);
 
         /**
          * 声明一个队列
@@ -145,7 +173,7 @@ class RabbitmqManager
          * @param bool $exclusive 队列是否可以被其他队列访问
          * @param bool $auto_delete 通道关闭后是否删除队列
          */
-        $channel->queue_declare($queue, false, $durable, false, false);
+        $channel->queue_declare($queue, false, $durable, false, false, false, $queueArguments);
 
         /**
          * 将队列与交换机进行绑定
