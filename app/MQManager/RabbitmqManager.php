@@ -39,7 +39,9 @@ class RabbitmqManager
 
         $this->bind($channel, $exchange, $type, $queue);
 
-        $message = new AMQPMessage(json_encode($body, JSON_UNESCAPED_UNICODE));
+        $message = new AMQPMessage(json_encode($body, JSON_UNESCAPED_UNICODE), [
+            'delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT // 消息持久化
+        ]);
 
         $channel->basic_publish($message, $exchange);
     }
