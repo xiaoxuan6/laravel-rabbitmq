@@ -34,6 +34,9 @@ class ConfigAttribute
     /** @var string 消费者标签 */
     protected $consumer_tag = '';
 
+    /** @var bool 是否开启延迟队列 */
+    protected $delay = false;
+
     public function __construct($exchange, $queue, $type, $noAck = true, $option = [])
     {
         $this->exchange = $exchange;
@@ -63,6 +66,15 @@ class ConfigAttribute
     public function getExchange()
     {
         return $this->exchange;
+    }
+
+    /**
+     * 是否开启延迟队列（不代表延迟时间）
+     * @return bool
+     */
+    public function getDelay(): bool
+    {
+        return $this->delay;
     }
 
     public function getNoAck()

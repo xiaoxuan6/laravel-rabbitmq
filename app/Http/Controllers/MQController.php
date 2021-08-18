@@ -21,11 +21,11 @@ class MQController extends Controller
 
     public function pushSleep()
     {
-        $manage = new Rabbitmq('hyperf_delay', 'laravel_delay', 'direct');
+        $manage = new Rabbitmq('hyperf_delay_1', 'laravel_delay_1', 'direct');
 
-        for ($i = 0; $i < 100; $i++) {
+        for ($i = 1; $i <= 100; $i++) {
 
-            $manage->push(['id' => 'test' . $i, 'time' => Carbon::now()->toDateTimeString()], $i);
+            $manage->push(['id' => 'test' . $i, 'time' => Carbon::now()->toDateTimeString()], $i + 10);
         }
 
         dd('ok');

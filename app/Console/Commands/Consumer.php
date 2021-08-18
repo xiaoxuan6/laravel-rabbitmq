@@ -40,6 +40,8 @@ class Consumer extends Command
      */
     public function handle()
     {
+        $this->handleSleep();
+        /*
         // 手动回复 ack 确认消费成功
         $mq = new Rabbitmq('hyperf', 'laravel', 'fanout', true, [
             'prefetch_count' => 100, // 给每个消费者每次分配多少消息
@@ -51,14 +53,15 @@ class Consumer extends Command
             var_export($body['id'] . PHP_EOL);
 
             sleep(1);
-        });
+        });*/
     }
 
     public function handleSleep()
     {
         // 手动回复 ack 确认消费成功
-        $mq = new Rabbitmq('hyperf_delay', 'laravel_delay', 'direct', false, [
-            'prefetch_count' => 100, // 给每个消费者每次分配多少消息
+        $mq = new Rabbitmq('hyperf_delay_1', 'laravel_delay_1', 'direct', false, [
+            'prefetch_count' => 10, // 给每个消费者每次分配多少消息
+            'delay' => true // 开启延迟队列消费
         ]);
 
         $mq->pull(function ($body) {

@@ -145,11 +145,11 @@ class RabbitmqManager
 
         // 延迟队列
         $queueArguments = $arguments = [];
-//        if ($this->delay > 0) {
+        if ($this->delay > 0 || $attribute->getDelay()) {
+            $arguments = new AMQPTable(['x-delayed-type' => $type]);
             $type = 'x-delayed-message';
-            $arguments = new AMQPTable(['x-delayed-type' => 'direct']);
             $queueArguments = new AMQPTable(['x-dead-letter-exchange' => 'delayed']);
-//        }
+        }
 
         /**
          * 声明初始化交换机（
