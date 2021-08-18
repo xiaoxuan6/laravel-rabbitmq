@@ -28,8 +28,9 @@ class Rabbitmq
 
     /**
      * @param $body
+     * @param int $delay
      */
-    public function push($body, $delay = 0)
+    public function push($body, int $delay = 0)
     {
         $this->mq->push($body, $delay);
     }

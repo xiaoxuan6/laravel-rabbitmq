@@ -17,3 +17,6 @@ Route::get('/', function () {
 
 Route::get('push', 'MQController@push');
 Route::get('pushSleep', 'MQController@pushSleep');
+
+Route::get('demo', 'DemoController@product');
+
