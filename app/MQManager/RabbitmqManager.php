@@ -115,6 +115,10 @@ class RabbitmqManager
      */
     public function bind(AMQPChannel $channel, $exchange, $type, $queue)
     {
+        $attribute = $this->attribute;
+
+        $durable = $attribute->getDurable();
+
         /**
          * 声明初始化交换机（
          *      direct【精准推送】、
@@ -127,7 +131,7 @@ class RabbitmqManager
          * @param bool $durable 是否开启队列持久化
          * @param bool $auto_delete 通道关闭后是否删除队列
          */
-        $channel->exchange_declare($exchange, $type, false, false, false);
+        $channel->exchange_declare($exchange, $type, false, $durable, false);
 
         /**
          * 声明一个队列
@@ -137,7 +141,7 @@ class RabbitmqManager
          * @param bool $exclusive 队列是否可以被其他队列访问
          * @param bool $auto_delete 通道关闭后是否删除队列
          */
-        $channel->queue_declare($queue, false, false, false, false);
+        $channel->queue_declare($queue, false, $durable, false, false);
 
         /**
          * 将队列与交换机进行绑定
