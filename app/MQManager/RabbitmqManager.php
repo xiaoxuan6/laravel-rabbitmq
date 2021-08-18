@@ -59,6 +59,7 @@ class RabbitmqManager
         $prefetch_size = $attribute->getPrefetchSize();
         $prefetch_count = $attribute->getPrefetchCount();
         $a_global = $attribute->getGlobal();
+        $consumer_tag = $attribute->getConsumerTag();
 
         $this->bind($channel, $exchange, $type, $queue);
 
@@ -78,7 +79,7 @@ class RabbitmqManager
          * @param bool $nowait 不返回执行结果 ,但是如果排他开启的话,则必须需要等待结果的,如果两个一起开就会报错
          * @param callable|null $callback 回调函数
          */
-        $channel->basic_consume($queue, '', false, $noAck, false, false, function ($msg) use ($noAck, $closure) {
+        $channel->basic_consume($queue, $consumer_tag, false, $noAck, false, false, function ($msg) use ($noAck, $closure) {
 
             try {
 

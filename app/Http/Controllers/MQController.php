@@ -11,7 +11,7 @@ class MQController extends Controller
     {
         $manage = new RabbitmqManager(new ConfigAttribute('hyperf', 'laravel', 'fanout'));
 
-        for ($i = 0; $i < 100; $i++) {
+        for ($i = 0; $i < 10000; $i++) {
 
             $manage->push(['id' => 'test' . $i]);
         }

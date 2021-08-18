@@ -25,14 +25,17 @@ class ConfigAttribute
     /** @var bool false=限制单个消费者；true=限制整个信道 */
     protected $global = false;
 
-    public function __construct($exchange, $queue, $type, $noAck = true, $optaion = [])
+    /** @var string 消费者标签 */
+    protected $consumer_tag = '';
+
+    public function __construct($exchange, $queue, $type, $noAck = true, $option = [])
     {
         $this->exchange = $exchange;
         $this->queue = $queue;
         $this->type = $type;
         $this->noAck = $noAck;
 
-        foreach ($optaion as $key => $val) {
+        foreach ($option as $key => $val) {
 
             if (property_exists($this, $key)) {
                 $this->{$key} = $val;
@@ -74,5 +77,10 @@ class ConfigAttribute
     public function getGlobal(): int
     {
         return $this->global;
+    }
+
+    public function getConsumerTag(): string
+    {
+        return $this->consumer_tag;
     }
 }

@@ -40,7 +40,10 @@ class Consumer extends Command
     public function handle()
     {
         // 手动回复 ack 确认消费成功
-        $config = new ConfigAttribute('hyperf', 'laravel', 'fanout', false, ['prefetch_count' => 10]);
+        $config = new ConfigAttribute('hyperf', 'laravel', 'fanout', false, [
+            'prefetch_count' => 100, // 给每个消费者每次分配多少消息
+//            'consumer_tag' => 'amq.ctag-9eRYpBpSWEpeglsixmq0Ew'
+        ]);
 
         $mq = new \App\MQManager\RabbitmqManager($config);
         $mq->pull(function ($body) {
