@@ -16,8 +16,11 @@ class ConfigAttribute
     /** @var bool 是否不需要回复确认即被认为被消费 */
     protected $noAck;
 
-    /** @var bool 是否开启队列持久化; true：服务器重启会保留下来Exchange */
+    /** @var bool 是否开启队列持久化; true：服务器重启会保留下来队列 */
     protected $durable = false;
+
+    /** @var bool 是否开启消息持久化; true：服务器重启会保留下来队列消息 */
+    protected $durable_message = true;
 
     /** @var int 最大 unacked 消息的字节数 */
     protected $prefetch_size = 0;
@@ -70,6 +73,11 @@ class ConfigAttribute
     public function getDurable(): bool
     {
         return $this->durable;
+    }
+
+    public function getDurableMessage(): bool
+    {
+        return $this->durable_message;
     }
 
     public function getPrefetchSize(): int
