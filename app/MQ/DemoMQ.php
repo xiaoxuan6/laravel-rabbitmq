@@ -20,6 +20,11 @@ class DemoMQ extends RabbitmqConnection
         'prefetch_count' => 10 // 给每个消费者每次分配多少消息
     ];
 
+    public function setConfiguration()
+    {
+        $this->defaultConfiguration = config('services.rabbitmq');
+    }
+
     public function receive($body)
     {
         echo $body;

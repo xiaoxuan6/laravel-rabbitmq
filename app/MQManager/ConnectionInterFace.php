@@ -16,11 +16,4 @@ interface ConnectionInterFace
      * @return mixed
      */
     public function send($body);
-
-    /**
-     * 接受消费者数据
-     * @param $body
-     * @return mixed
-     */
-    public function receive($body);
 }

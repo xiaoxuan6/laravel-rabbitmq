@@ -14,21 +14,22 @@ class Rabbitmq
      */
     private $listener;
 
-    public function __construct($exchange, $queue, $type, $noAck = true, $option = [])
+    public function __construct($configuration, $exchange, $queue, $type, $noAck = true, $option = [])
     {
-        $this->init($exchange, $queue, $type, $noAck, $option);
+        $this->init($configuration, $exchange, $queue, $type, $noAck, $option);
     }
 
     /**
+     * @param $configuration
      * @param $exchange
      * @param $queue
      * @param $type
      * @param $noAck
      * @param $option
      */
-    private function init($exchange, $queue, $type, $noAck, $option)
+    private function init($configuration, $exchange, $queue, $type, $noAck, $option)
     {
-        $this->mq = new RabbitmqManager(new ConfigAttribute($exchange, $queue, $type, $noAck, $option));
+        $this->mq = new RabbitmqManager($configuration, new ConfigAttribute($exchange, $queue, $type, $noAck, $option));
     }
 
     /**

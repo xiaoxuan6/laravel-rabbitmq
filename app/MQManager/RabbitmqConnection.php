@@ -2,7 +2,7 @@
 
 namespace App\MQManager;
 
-class RabbitmqConnection implements ConnectionInterFace
+abstract class RabbitmqConnection implements ConnectionInterFace
 {
     /**     * 队列名称     */
     const QUEUE_NAME = '';
@@ -21,9 +21,20 @@ class RabbitmqConnection implements ConnectionInterFace
 
     protected $option = [];
 
+    protected $defaultConfiguration = [
+        'host' => '',
+        'port' => '',
+        'user' => '',
+        'password' => '',
+        'vhost' => '',
+    ];
+
     public function __construct()
     {
+        $this->setConfiguration();
+
         $this->queue = new Rabbitmq(
+            $this->defaultConfiguration,
             static::EXCHANGE_NAME,
             static::QUEUE_NAME,
             static::TYPE_NAME,
@@ -31,6 +42,12 @@ class RabbitmqConnection implements ConnectionInterFace
             $this->option
         );
     }
+
+    /**
+     * 设置账号密码
+     * @return mixed
+     */
+    abstract public function setConfiguration();
 
     /**
      * 消费者
@@ -60,8 +77,5 @@ class RabbitmqConnection implements ConnectionInterFace
      * @param $body
      * @return mixed|void
      */
-    public function receive($body)
-    {
-        // TODO: Implement receive() method.
-    }
+    abstract public function receive($body);
 }

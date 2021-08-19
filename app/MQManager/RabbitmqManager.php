@@ -2,7 +2,6 @@
 
 namespace App\MQManager;
 
-use Illuminate\Support\Arr;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
@@ -21,9 +20,9 @@ class RabbitmqManager
     /** @var $channel AMQPChannel */
     protected $channel;
 
-    public function __construct(ConfigAttribute $attribute)
+    public function __construct($configuration, ConfigAttribute $attribute)
     {
-        $this->connect();
+        $this->connect($configuration);
         $this->attribute = $attribute;
     }
 
@@ -184,16 +183,15 @@ class RabbitmqManager
     /**
      * 链接 amqp
      */
-    private function connect()
+    private function connect($configuration)
     {
         try {
 
-            $config = config('services.rabbitmq');
-            $host = Arr::get($config, 'host');
-            $port = Arr::get($config, 'port');
-            $user = Arr::get($config, 'user');
-            $password = Arr::get($config, 'password');
-            $vhost = Arr::get($config, 'vhost');
+            $host = $configuration['host'];
+            $port = $configuration['port'];
+            $user = $configuration['user'];
+            $password = $configuration['password'];
+            $vhost = $configuration['vhost'];
 
             $connection = new AMQPStreamConnection($host, $port, $user, $password, $vhost);
 
