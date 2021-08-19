@@ -63,7 +63,7 @@ abstract class RabbitmqConnection implements ConnectionInterFace
      * 生产者
      *
      * @param string|array $body 发送消息内容
-     * @param int $delay 延迟时间，秒数
+     * @param int $delay 延迟时间，秒数(这里延迟时间是针对交换机把消息传给队列的时间，实际延时时间从消息推送到消费之间的时间)
      * @return mixed|void
      */
     public function send($body, int $delay = 0)

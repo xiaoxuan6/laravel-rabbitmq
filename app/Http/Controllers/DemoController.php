@@ -15,7 +15,7 @@ class DemoController extends Controller
 //        $mq->push(['name' => 'eto', 'time' => Carbon::now()->toDateTimeString()], 1 * 60);
 
         $mq = new DemoMq();
-        $mq->send('hello world', 5);
+        $mq->send(['body' => 'hello world', 'time' => Carbon::now()->toTimeString()], 5);
 
         dd('ok');
     }

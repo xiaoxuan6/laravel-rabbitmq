@@ -3,6 +3,7 @@
 namespace App\MQ;
 
 use App\MQManager\RabbitmqConnection;
+use Carbon\Carbon;
 
 class DemoMQ extends RabbitmqConnection
 {
@@ -27,7 +28,9 @@ class DemoMQ extends RabbitmqConnection
 
     public function receive($body)
     {
-        echo $body;
+        $time = Carbon::now()->toTimeString();
+
+        echo 'body：' . $body['body'] . ' 生产时间：' . $body['time'] . ' 消费时间：' . $time . ' 损耗时间：' . Carbon::parse($time)->diffInSeconds($body['time']) . PHP_EOL;
     }
 
 }
