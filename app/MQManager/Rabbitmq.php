@@ -9,6 +9,11 @@ class Rabbitmq
      */
     protected $mq;
 
+    /**
+     * @var $listener ConnectionInterFace
+     */
+    private $listener;
+
     public function __construct($exchange, $queue, $type, $noAck = true, $option = [])
     {
         $this->init($exchange, $queue, $type, $noAck, $option);
@@ -35,11 +40,21 @@ class Rabbitmq
         $this->mq->push($body, $delay);
     }
 
-    /**
-     * @param \Closure $closure
-     */
-    public function pull(\Closure $closure)
+    public function pull()
     {
-        $this->mq->pull($closure);
+        $listener = $this->listener;
+
+        $this->mq->pull(function ($body) use ($listener) {
+
+            $listener->receive($body);
+
+        });
     }
+
+    public function setListener($listener): Rabbitmq
+    {
+        $this->listener = $listener;
+        return $this;
+    }
+
 }

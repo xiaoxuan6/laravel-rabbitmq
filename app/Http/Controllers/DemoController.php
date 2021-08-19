@@ -11,8 +11,11 @@ class DemoController extends Controller
 {
     public function product()
     {
-        $mq = new Rabbitmq('demo_product', 'demo_product_queue', 'direct');
-        $mq->push(['name' => 'eto', 'time' => Carbon::now()->toDateTimeString()], 1 * 60);
+//        $mq = new Rabbitmq('demo_product', 'demo_product_queue', 'direct');
+//        $mq->push(['name' => 'eto', 'time' => Carbon::now()->toDateTimeString()], 1 * 60);
+
+        $mq = new DemoMq();
+        $mq->send('hello world', 5);
 
         dd('ok');
     }

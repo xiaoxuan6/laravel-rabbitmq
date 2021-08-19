@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\MQ\DemoMQ;
 use App\MQManager\Rabbitmq;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
@@ -39,17 +40,20 @@ class DemoConsumer extends Command
      */
     public function handle()
     {
-        $mq = new Rabbitmq('demo_product', 'demo_product_queue', 'direct', false, [
-            'delay' => true
-        ]);
+//        $mq = new Rabbitmq('demo_product', 'demo_product_queue', 'direct', false, [
+//            'delay' => true
+//        ]);
+//
+//        $mq->pull(function ($body) {
+//
+//            $start_time = $body['time'];
+//            $end_time = Carbon::now()->toDateTimeString();
+//            echo '发送时间：' . $start_time . ' Name：' . $body['name'] . ' 消费时间：' . $end_time . ' 延迟：' . Carbon::parse($end_time)->diffInSeconds($start_time) . PHP_EOL;
+//
+//            dd('消费成功，但未删除队列可以重复消费');
+//        });
 
-        $mq->pull(function ($body) {
-
-            $start_time = $body['time'];
-            $end_time = Carbon::now()->toDateTimeString();
-            echo '发送时间：' . $start_time . ' Name：' . $body['name'] . ' 消费时间：' . $end_time . ' 延迟：' . Carbon::parse($end_time)->diffInSeconds($start_time) . PHP_EOL;
-
-            dd('消费成功，但未删除队列可以重复消费');
-        });
+        $mq = new DemoMQ();
+        $mq->run();
     }
 }
