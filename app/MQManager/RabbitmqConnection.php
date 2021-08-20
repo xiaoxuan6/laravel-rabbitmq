@@ -10,7 +10,9 @@ abstract class RabbitmqConnection implements ConnectionInterFace
     /**     * 通道名称     */
     const EXCHANGE_NAME = '';
 
-    /**     * 通道类型     */
+    /**
+     * 通道类型：direct、fanout、topic、x-delayed-message（延迟消息）
+     */
     const TYPE_NAME = '';
 
     /**     * @var Rabbitmq */
@@ -21,6 +23,10 @@ abstract class RabbitmqConnection implements ConnectionInterFace
 
     protected $option = [];
 
+    /**
+     * 默认配置信息
+     * @var string[]
+     */
     protected $defaultConfiguration = [
         'host' => '',
         'port' => '',
@@ -29,9 +35,13 @@ abstract class RabbitmqConnection implements ConnectionInterFace
         'vhost' => '',
     ];
 
+    protected $params = ['host', 'port', 'user', 'password', 'vhost'];
+
     public function __construct()
     {
         $this->setConfiguration();
+
+        $this->verify();
 
         $this->queue = new Rabbitmq(
             $this->defaultConfiguration,
@@ -48,6 +58,23 @@ abstract class RabbitmqConnection implements ConnectionInterFace
      * @return mixed
      */
     abstract public function setConfiguration();
+
+    /**
+     * 验证配置信息
+     */
+    final private function verify()
+    {
+        foreach ($this->defaultConfiguration as $key => $value) {
+
+            if (!in_array($key, $this->params)) {
+                throw new \InvalidArgumentException("Invalid key {$key}");
+            }
+
+            if (is_null($value) || empty($value)) {
+                throw new \InvalidArgumentException("Config key {$key} cannot is null");
+            }
+        }
+    }
 
     /**
      * 消费者
