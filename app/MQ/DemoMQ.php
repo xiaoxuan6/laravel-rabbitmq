@@ -41,4 +41,11 @@ class DemoMQ extends RabbitmqConnection
         echo 'body：' . $body['body'] . ' 生产时间：' . $body['time'] . ' 消费时间：' . $time . ' 损耗时间：' . Carbon::parse($time)->diffInSeconds($body['time']) . PHP_EOL;
     }
 
+    public function callback($msg): \Closure
+    {
+        return function () use ($msg) {
+            echo ' [x] ', $msg->delivery_info['routing_key'], ':', $msg->body, "\n";
+        };
+    }
+
 }
