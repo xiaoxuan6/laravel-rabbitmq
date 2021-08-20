@@ -33,7 +33,6 @@ class DemoMQ extends RabbitmqConnection
         ];
     }
 
-
     public function receive($body)
     {
         $time = Carbon::now()->toTimeString();

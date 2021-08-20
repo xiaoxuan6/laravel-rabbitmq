@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\MQ\DemoMq;
+use App\MQ\DemoRoutingKey;
 use App\MQManager\Rabbitmq;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -17,6 +18,8 @@ class DemoController extends Controller
         $mq = new DemoMq();
         $mq->send(['body' => 'hello world', 'time' => Carbon::now()->toTimeString()], 0);
 
+        $mq = new DemoRoutingKey();
+        $mq->send('2323232', 0);
         dd('ok');
     }
 }

@@ -62,9 +62,17 @@ class RabbitmqManager
             $properties = $properties + ['application_headers' => $table];
         }
 
-        $message = new AMQPMessage(json_encode($body, JSON_UNESCAPED_UNICODE), $properties);
+        try {
 
-        $channel->basic_publish($message, $exchange);
+            $message = new AMQPMessage(json_encode($body, JSON_UNESCAPED_UNICODE), $properties);
+
+            $channel->basic_publish($message, $exchange, $attribute->getRoutingKey());
+
+        } catch (\Exception $exception) {
+
+            die($exception->getMessage());
+
+        }
     }
 
     /**

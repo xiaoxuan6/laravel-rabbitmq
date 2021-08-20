@@ -22,7 +22,7 @@ abstract class RabbitmqConnection implements ConnectionInterFace
     protected $queue;
 
     /** @var bool 是否不需要回复确认即被认为被消费 */
-    protected $noack = false;
+    protected $noack = true;
 
     protected $option = [];
 
