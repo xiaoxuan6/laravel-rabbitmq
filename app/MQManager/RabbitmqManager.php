@@ -108,7 +108,7 @@ class RabbitmqManager
 
                 $body = json_decode($msg->body, true);
 
-                $closure($body);
+                $closure($body, $msg);
 
                 if (!$noAck) {
                     $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
@@ -177,7 +177,7 @@ class RabbitmqManager
         /**
          * 将队列与交换机进行绑定
          */
-        $channel->queue_bind($queue, $exchange);
+        $channel->queue_bind($queue, $exchange, $attribute->getRoutingKey());
     }
 
     /**

@@ -14,9 +14,9 @@ class Rabbitmq
      */
     private $listener;
 
-    public function __construct($configuration, $exchange, $queue, $type, $noAck = true, $option = [])
+    public function __construct($configuration, $exchange, $queue, $type, $routing_key = '', $noAck = true, $option = [])
     {
-        $this->init($configuration, $exchange, $queue, $type, $noAck, $option);
+        $this->init($configuration, $exchange, $queue, $type, $routing_key, $noAck, $option);
     }
 
     /**
@@ -24,12 +24,13 @@ class Rabbitmq
      * @param $exchange
      * @param $queue
      * @param $type
+     * @param $routing_key
      * @param $noAck
      * @param $option
      */
-    private function init($configuration, $exchange, $queue, $type, $noAck, $option)
+    private function init($configuration, $exchange, $queue, $type, $routing_key, $noAck, $option)
     {
-        $this->mq = new RabbitmqManager($configuration, new ConfigAttribute($exchange, $queue, $type, $noAck, $option));
+        $this->mq = new RabbitmqManager($configuration, new ConfigAttribute($exchange, $queue, $type, $routing_key, $noAck, $option));
     }
 
     /**
@@ -45,9 +46,11 @@ class Rabbitmq
     {
         $listener = $this->listener;
 
-        $this->mq->pull(function ($body) use ($listener) {
+        $this->mq->pull(function ($body, $msg) use ($listener) {
 
             $listener->receive($body);
+
+            $listener->callback($msg)();
 
         });
     }

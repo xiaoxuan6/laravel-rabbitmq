@@ -13,6 +13,11 @@ class ConfigAttribute
     /** 交换机名称 @var */
     protected $exchange;
 
+    /**
+     * @var string 路由; 绑定键的意义取决于交换器类型。fanout类型交换器会忽略这个值。
+     */
+    protected $routing_key = '';
+
     /** @var bool 是否不需要回复确认即被认为被消费 */
     protected $noAck;
 
@@ -37,11 +42,12 @@ class ConfigAttribute
     /** @var bool 是否开启延迟队列 */
     protected $delay = false;
 
-    public function __construct($exchange, $queue, $type, $noAck = true, $option = [])
+    public function __construct($exchange, $queue, $type, $routing_key = '', $noAck = true, $option = [])
     {
         $this->exchange = $exchange;
         $this->queue = $queue;
         $this->type = $type;
+        $this->routing_key = $routing_key;
         $this->noAck = $noAck;
 
         foreach ($option as $key => $val) {
@@ -66,6 +72,11 @@ class ConfigAttribute
     public function getExchange()
     {
         return $this->exchange;
+    }
+
+    public function getRoutingKey(): string
+    {
+        return $this->routing_key;
     }
 
     /**

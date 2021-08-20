@@ -15,6 +15,9 @@ abstract class RabbitmqConnection implements ConnectionInterFace
      */
     const TYPE_NAME = '';
 
+    /**     * 路由     */
+    const ROUTING_KEY_NAME = '';
+
     /**     * @var Rabbitmq */
     protected $queue;
 
@@ -48,6 +51,7 @@ abstract class RabbitmqConnection implements ConnectionInterFace
             static::EXCHANGE_NAME,
             static::QUEUE_NAME,
             static::TYPE_NAME,
+            static::ROUTING_KEY_NAME,
             $this->noack,
             $this->option
         );
@@ -105,4 +109,17 @@ abstract class RabbitmqConnection implements ConnectionInterFace
      * @return mixed|void
      */
     abstract public function receive($body);
+
+    /**
+     * 自定义回调处理
+     *
+     * @param $msg
+     * @return \Closure
+     */
+    public function callback($msg): \Closure
+    {
+        return function () {
+
+        };
+    }
 }
