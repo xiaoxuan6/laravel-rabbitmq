@@ -15,7 +15,9 @@ abstract class RabbitmqConnection implements ConnectionInterFace
      */
     const TYPE_NAME = '';
 
-    /**     * 路由     */
+    /**
+     * 路由：对于Fanout类型的exchange，会忽略
+     */
     const ROUTING_KEY_NAME = '';
 
     /**     * @var Rabbitmq */

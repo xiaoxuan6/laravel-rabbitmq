@@ -12,7 +12,7 @@ class DemoRouteKeyConsumer extends Command
      *
      * @var string
      */
-    protected $signature = 'demo::key:consumer';
+    protected $signature = 'demo:key:consumer';
 
     /**
      * The console command description.
