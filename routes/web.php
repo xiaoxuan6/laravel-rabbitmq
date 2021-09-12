@@ -20,3 +20,5 @@ Route::get('pushSleep', 'MQController@pushSleep');
 
 Route::get('demo', 'DemoController@product');
 
+Route::get('job', 'JobController@index');
+
